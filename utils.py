@@ -307,6 +307,15 @@ def trace(msg):
 def is_python_extension(filename):
     return filename.split(".")[1] == "py"
 
+def ensure_final_newline(filename):
+    with open(filename, "r+b") as f:
+        # must open as b to seek from end; read last character
+        f.seek(-1, 2)
+        b = f.read(1)
+        newline = bytes('\n', 'utf-8')
+        if b != newline:
+            f.write(newline)
+
 # Given the `ast` output of a pass and a test program (root) name,
 # runs the interpreter on the program and compares the output to the
 # expected "golden" output.
@@ -321,9 +330,9 @@ def test_pass(passname, interp, program_root, ast,
     interp(ast)
     sys.stdin = stdin
     sys.stdout = stdout
-    os.system("echo w | ed -s >&/dev/null " + program_root + '.out')
-    os.system("echo w | ed -s >&/dev/null " + program_root + '.golden')
-    result = os.system('diff ' + output_file + ' ' + program_root + '.golden')
+    ensure_final_newline(program_root + '.out')
+    ensure_final_newline(program_root + '.golden')
+    result = os.system('diff -B ' + output_file + ' ' + program_root + '.golden')
     if result == 0:
         trace('compiler ' + compiler_name + ' success on pass ' + passname \
               + ' on test\n' + program_root + '\n')
@@ -428,9 +437,9 @@ def compile_and_test(compiler, compiler_name, type_check_P, interp_P, interp_C,
         output_file = program_root + '.out'
         os.system('./a.out < ' + input_file + ' > ' + output_file)
 
-    os.system("echo w | ed -s >&/dev/null " + program_root + '.out')
-    os.system("echo w | ed -s >&/dev/null " + program_root + '.golden')
-    result = os.system('diff ' + program_root + '.out ' \
+    ensure_final_newline(program_root + '.out')
+    ensure_final_newline(program_root + '.golden')
+    result = os.system('diff -B ' + program_root + '.out ' \
                        + program_root + '.golden')
     if result == 0:
         successful_passes += 1
