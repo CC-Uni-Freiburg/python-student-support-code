@@ -16,10 +16,12 @@ class InterpLtup(InterpLwhile):
       case Tuple(es, Load()):
         # use a list for mutability
         return [self.interp_exp(e, env) for e in es]
-      case Subscript(tup, index, Load()):
+      case Subscript(tup, Constant(index), Load()):
         t = self.interp_exp(tup, env)
-        n = self.interp_exp(index, env)
-        return t[n]
+        if index >= 0 and index < len(t):
+            return t[index]
+        else:
+            raise TrappedError('index out of bounds')
       case Call(Name('len'), [tup]):
         t = self.interp_exp(tup, env)
         return len(t)
@@ -37,10 +39,12 @@ class InterpLtup(InterpLwhile):
     match ss[0]:
       case Collect(size):
         return self.interp_stmts(ss[1:], env)
-      case Assign([Subscript(tup, index)], value):
+      case Assign([Subscript(tup, Constant(index), Store())], value):
         tup = self.interp_exp(tup, env)
-        index = self.interp_exp(index, env)
-        tup[index] = self.interp_exp(value, env)
+        if index >= 0 and index < len(tup):
+            tup[index] = self.interp_exp(value, env)
+        else:
+            raise TrappedError('index out of bounds')
         return self.interp_stmts(ss[1:], env)
       case _:
         return super().interp_stmts(ss, env)

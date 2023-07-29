@@ -1,0 +1,6 @@
+a.out
+runtime.o
+*.s
+*.out
+*.swp
+__pycache__/

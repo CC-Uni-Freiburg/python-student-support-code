@@ -18,6 +18,10 @@ class InterpLif(InterpLvar):
         return lambda x, y: x == y
       case NotEq():
         return lambda x, y: x != y
+    raise Exception(
+        "interp_cmp: unexpected "
+        + repr(cmp)
+    )
 
   def interp_exp(self, e, env):
     match e:
@@ -47,11 +51,6 @@ class InterpLif(InterpLvar):
         l = self.interp_exp(left, env)
         r = self.interp_exp(right, env)
         return self.interp_cmp(cmp)(l, r)
-      # case Let(Name(x), rhs, body):
-      #   v = self.interp_exp(rhs, env)
-      #   new_env = dict(env)
-      #   new_env[x] = v
-      #   return self.interp_exp(body, new_env)
       case Begin(ss, e):
         self.interp_stmts(ss, env)
         return self.interp_exp(e, env)
@@ -70,4 +69,3 @@ class InterpLif(InterpLvar):
             return self.interp_stmts(orelse + ss[1:], env)
       case _:
         return super().interp_stmts(ss, env)
-    

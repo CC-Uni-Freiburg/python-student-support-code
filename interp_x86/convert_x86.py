@@ -1,16 +1,19 @@
 # Convert from the x86 AST classes defined in utils.py into the parse
 # tree format used by the interpreter.
 
+from ast import Constant, Name
+
 from lark import Tree
-from ast import Name, Constant
+from utils import GlobalValue, label_name
 from x86_ast import *
-from utils import label_name, GlobalValue
+
 
 def convert_int(value):
-    if value >= 0:
-        return Tree('int_a', [Tree('int_a', [value])])
-    else:
-        return Tree('neg_a',[Tree('int_a', [- value])])
+    return Tree("int_a", [value])    
+    # if value >= 0:
+    #     return Tree("int_a", [value])
+    # else:
+    #     return Tree("neg_a", [Tree("int_a", [-value])])
 
 def convert_arg(arg):
     match arg:
@@ -24,7 +27,7 @@ def convert_arg(arg):
             return Tree('mem_a', [convert_int(offset), reg])
         case ByteReg(id):
             return Tree('reg_a', [id])
-        case GlobalValue(id):
+        case Global(id):
             return Tree('global_val_a', [id, 'rip'])
         case _:
             raise Exception('convert_arg: unhandled ' + repr(arg))
@@ -39,18 +42,33 @@ def convert_instr(instr):
             return Tree('jmp', [label])
         case JumpIf(cc, label):
             return Tree('j' + cc, [label])
+        case IndirectCallq(func, numargs):
+            return Tree('indirect_callq', [convert_arg(func)])
+        case IndirectJump(l):
+            return Tree('indirect_jmp', [convert_arg(l)])
+        case TailJump(l, i):
+            # Treat the jump like an indirect call
+            return Tree('tail_jmp', [convert_arg(l)])
         case _:
             raise Exception('error in convert_instr, unhandled ' + repr(instr))
 
 def convert_program(p):
-    if isinstance(p.body, list):
-        main_instrs = [convert_instr(instr) for instr in p.body]
-        main_block = Tree('block', [label_name('main')] + main_instrs)
-        return Tree('prog', [main_block]) 
-    elif isinstance(p.body, dict):
+    if hasattr(p, 'defs'):
         blocks = []
-        for (l, ss) in p.body.items():
-            blocks.append(Tree('block',
-                               [l] + [convert_instr(instr) for instr in ss]))
+        for df in p.defs:
+            for (l, ss) in df.body.items():
+                blocks.append(Tree('block',
+                                   [l] + [convert_instr(instr) for instr in ss]))
         return Tree('prog', blocks)
-            
+    else:
+        if isinstance(p.body, list):
+            main_instrs = [convert_instr(instr) for instr in p.body]
+            main_block = Tree('block', [label_name('main')] + main_instrs)
+            return Tree('prog', [main_block]) 
+        elif isinstance(p.body, dict):
+            blocks = []
+            for (l, ss) in p.body.items():
+                blocks.append(Tree('block',
+                                   [l] + [convert_instr(instr) for instr in ss]))
+            return Tree('prog', blocks)
+                

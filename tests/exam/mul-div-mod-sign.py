@@ -1,0 +1,21 @@
+#in=17
+#in=4
+#golden=4010-40-10-401040-10
+x = input_int()
+y = input_int()
+print(x // y)
+print(0)
+print(x % y)
+print(0)
+print(-x // y)
+print(0)
+print(-x % y)
+print(0)
+print(x // -y)
+print(0)
+print(x % -y)
+print(0)
+print(-x // -y)
+print(0)
+print(-x % -y)
+print(0)
