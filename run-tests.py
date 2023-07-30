@@ -57,8 +57,13 @@ if True:
     # Set this to True if you want to see the output of the compiler
     utils.debug = False
     # Here you can set the tests that should be checked
+    succ = True
     for lang in "var regalloc lif tuples fun".split():
-        utils.run_tests(lang, compiler, lang, typecheck_dict, interp_dict)
+        succ = succ and utils.run_tests(
+            lang, compiler, lang, typecheck_dict, interp_dict
+        )
+    if succ:
+        print("All tests passed!")
 else:
     # In case you only want to test a single test file
     # you can enable the execution of this branch
