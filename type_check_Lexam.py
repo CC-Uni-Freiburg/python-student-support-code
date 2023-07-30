@@ -12,7 +12,7 @@ class TypeCheckLexam(TypeCheckLfun):
             case ast.List(es, ast.Load()):
                 ts = [self.type_check_exp(e, env) for e in es]
                 elt_ty = ts[0] if len(ts) > 0 else utils.Bottom()
-                for (ty, elt) in zip(ts, es):
+                for ty, elt in zip(ts, es):
                     self.check_type_equal(elt_ty, ty, elt)
                 e.has_type = utils.ListType(elt_ty)  # type: ignore
                 return e.has_type  # type: ignore
@@ -33,10 +33,7 @@ class TypeCheckLexam(TypeCheckLfun):
                     case utils.ListType(_):
                         return utils.IntType()
                     case _:
-                        raise Exception(
-                            "array_len expected list, not "
-                            + repr(tup_t)
-                        )
+                        raise Exception("array_len expected list, not " + repr(tup_t))
             case ast.Call(ast.Name("array_load"), [tup, index]):
                 tup_ty = self.type_check_exp(tup, env)
                 tup.has_type = tup_ty  # type: ignore
@@ -46,10 +43,7 @@ class TypeCheckLexam(TypeCheckLfun):
                     case utils.ListType(t):
                         return t
                     case _:
-                        raise Exception(
-                            "array_len expected list, not "
-                            + repr(tup_ty)
-                        )
+                        raise Exception("array_len expected list, not " + repr(tup_ty))
             case ast.Call(ast.Name("array_store"), [tup, index, value]):
                 tup_ty = self.type_check_exp(tup, env)
                 tup.has_type = tup_ty  # type: ignore
@@ -62,8 +56,7 @@ class TypeCheckLexam(TypeCheckLfun):
                         return utils.VoidType()
                     case _:
                         raise Exception(
-                            "array_store expected list, not "
-                            + repr(tup_ty)
+                            "array_store expected list, not " + repr(tup_ty)
                         )
             case ast.Subscript(tup, index, ast.Load()):
                 tup_ty = self.type_check_exp(tup, env)
@@ -96,7 +89,7 @@ class TypeCheckLexam(TypeCheckLfun):
                 tup.has_type = tup_ty
                 match tup_ty:
                     case utils.ListType(ty):
-                        self.check_type_equal(ty, value_ty, ss[0])          
+                        self.check_type_equal(ty, value_ty, ss[0])
                     case utils.Bottom():
                         pass
                     case _:

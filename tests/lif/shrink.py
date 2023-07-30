@@ -1,6 +1,6 @@
 if True or False:
     print(1)
-else: 
+else:
     print(0)
 if True and True:
     print(1)

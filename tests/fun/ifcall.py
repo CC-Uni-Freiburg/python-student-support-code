@@ -4,6 +4,7 @@ def truth(x: int) -> bool:
     else:
         return False
 
+
 if truth(input_int()):
     print(42)
 else:

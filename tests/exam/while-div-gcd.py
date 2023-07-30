@@ -1,6 +1,6 @@
-#in=240
-#in=46
-#golden=-9-11147-1112
+# in=240
+# in=46
+# golden=-9-11147-1112
 a = input_int()
 b = input_int()
 
@@ -27,5 +27,3 @@ print(-111)
 print(old_t)
 print(-111)
 print(old_r)
-
-    

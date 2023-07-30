@@ -24,7 +24,4 @@ class InterpCif(InterpLif):
                 while isinstance(r, utils.Goto):
                     r = self.interp_stmts(self.blocks[utils.label_name(r.label)], env)
             case _:
-                raise Exception(
-                    "interp: unexpected "
-                    + repr(p)
-                )
+                raise Exception("interp: unexpected " + repr(p))

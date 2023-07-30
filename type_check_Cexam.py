@@ -14,12 +14,7 @@ class TypeCheckCexam(TypeCheckCfun):
                         pass
                     case _:
                         raise Exception(
-                            "error: "
-                            + repr(t1)
-                            + " != "
-                            + repr(t2)
-                            + " in "
-                            + repr(e)
+                            "error: " + repr(t1) + " != " + repr(t2) + " in " + repr(e)
                         )
             case _:
                 super().check_type_equal(t1, t2, e)
@@ -31,7 +26,7 @@ class TypeCheckCexam(TypeCheckCfun):
             case ast.List(es, ast.Load()):
                 ts = [self.type_check_exp(e, env) for e in es]
                 elt_ty = ts[0]
-                for (ty, elt) in zip(ts, es):
+                for ty, elt in zip(ts, es):
                     self.check_type_equal(elt_ty, ty, elt)
                 e.has_type = utils.ListType(elt_ty)  # type: ignore
                 return e.has_type  # type: ignore
@@ -73,11 +68,11 @@ class TypeCheckCexam(TypeCheckCfun):
                 index_ty = self.type_check_exp(index, env)
                 self.check_type_equal(index_ty, utils.IntType(), index)
                 match tup_t:
-                  case utils.ListType(ty):
-                    self.check_type_equal(ty, value_t, s)
-                  case utils.Bottom():
-                      pass
-                  case _:
-                    return super().type_check_stmt(s, env)
+                    case utils.ListType(ty):
+                        self.check_type_equal(ty, value_t, s)
+                    case utils.Bottom():
+                        pass
+                    case _:
+                        return super().type_check_stmt(s, env)
             case _:
                 return super().type_check_stmt(s, env)

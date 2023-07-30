@@ -27,11 +27,11 @@ class InterpCexam(InterpCfun):
                 return ar if l >= 0 else -ar
             case ast.BinOp(left, ast.LShift(), right):
                 l = self.interp_exp(left, env)
-                r = self.interp_exp(right,env)
+                r = self.interp_exp(right, env)
                 return l << r
             case ast.BinOp(left, ast.RShift(), right):
                 l = self.interp_exp(left, env)
-                r = self.interp_exp(right,env)
+                r = self.interp_exp(right, env)
                 return l >> r
             case ast.BinOp(left, ast.BitOr(), right):
                 l = self.interp_exp(left, env)
@@ -39,11 +39,11 @@ class InterpCexam(InterpCfun):
                 return l | r
             case ast.BinOp(left, ast.BitXor(), right):
                 l = self.interp_exp(left, env)
-                r = self.interp_exp(right,env)
+                r = self.interp_exp(right, env)
                 return l ^ r
             case ast.BinOp(left, ast.BitAnd(), right):
                 l = self.interp_exp(left, env)
-                r = self.interp_exp(right,env)
+                r = self.interp_exp(right, env)
                 return l & r
             case ast.Call(ast.Name("array_len"), [tup]):
                 t = self.interp_exp(tup, env)
@@ -54,14 +54,14 @@ class InterpCexam(InterpCfun):
                 if n >= 0 and n < len(t):
                     return t[n]
                 else:
-                    raise TrappedError('array index out of bounds')
+                    raise TrappedError("array index out of bounds")
             case ast.Call(ast.Name("array_store"), [tup, index, value]):
                 t = self.interp_exp(tup, env)
                 n = self.interp_exp(index, env)
                 if n >= 0 and n < len(t):
                     t[n] = self.interp_exp(value, env)
                 else:
-                    raise TrappedError('array index out of bounds')
+                    raise TrappedError("array index out of bounds")
                 return None
             case _:
                 return super().interp_exp(e, env)
@@ -76,7 +76,7 @@ class InterpCexam(InterpCfun):
                 if n >= 0 and n < len(t):
                     t[n] = self.interp_exp(value, env)
                 else:
-                    raise TrappedError('index out of bounds')
+                    raise TrappedError("index out of bounds")
                 return self.interp_stmts(ss[1:], env)
             case _:
                 return super().interp_stmts(ss, env)

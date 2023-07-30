@@ -35,9 +35,9 @@ class TypeCheckLif(TypeCheckLvar):
                 r = self.type_check_exp(right, env)
                 self.check_type_equal(r, utils.BoolType(), right)
                 return utils.BoolType()
-            case ast.Compare(left, [cmp], [right]) if isinstance(cmp, ast.Eq) or isinstance(
-                cmp, ast.NotEq
-            ):
+            case ast.Compare(left, [cmp], [right]) if isinstance(
+                cmp, ast.Eq
+            ) or isinstance(cmp, ast.NotEq):
                 l = self.type_check_exp(left, env)
                 r = self.type_check_exp(right, env)
                 self.check_type_equal(l, r, e)

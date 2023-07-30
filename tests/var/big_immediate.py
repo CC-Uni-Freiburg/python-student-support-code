@@ -1,6 +1,6 @@
 # The number of variables is so high to force register allocation
 # to spill variables to the stack (relevant for assignment 3 and up)
-a = 4294967297 # 4294967297 = 2**32 + 1
+a = 4294967297  # 4294967297 = 2**32 + 1
 b = 4294967297
 c = 4294967297
 d = 4294967297

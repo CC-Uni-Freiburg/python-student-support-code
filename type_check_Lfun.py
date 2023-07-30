@@ -14,16 +14,11 @@ class TypeCheckLfun(TypeCheckLtup):
                 match t2:
                     case utils.FunctionType(ps2, rt2):
                         self.check_type_equal(rt1, rt2, e)
-                        for (p1, p2) in zip(ps1, ps2):
+                        for p1, p2 in zip(ps1, ps2):
                             self.check_type_equal(p1, p2, e)
                     case _:
                         raise Exception(
-                            "error: "
-                            + repr(t1)
-                            + " != "
-                            + repr(t2)
-                            + " in "
-                            + repr(e)
+                            "error: " + repr(t1) + " != " + repr(t2) + " in " + repr(e)
                         )
             case _:
                 super().check_type_equal(t1, t2, e)
@@ -36,10 +31,7 @@ class TypeCheckLfun(TypeCheckLtup):
                 elif id == "bool":
                     return utils.BoolType()
                 else:
-                    raise Exception(
-                        "parse_type_annot: unexpected "
-                        + repr(annot)
-                    )
+                    raise Exception("parse_type_annot: unexpected " + repr(annot))
             case utils.TupleType(ts):
                 return utils.TupleType([self.parse_type_annot(t) for t in ts])  # type: ignore
             case utils.ListType(t):
@@ -55,7 +47,7 @@ class TypeCheckLfun(TypeCheckLtup):
                 )
             case ast.Subscript(ast.Name("tuple"), ast.Tuple(ts)):
                 return utils.TupleType([self.parse_type_annot(t) for t in ts])
-            case ast.Subscript(ast.Name('tuple'), t):
+            case ast.Subscript(ast.Name("tuple"), t):
                 return utils.TupleType([self.parse_type_annot(t)])
             case ast.Subscript(ast.Name("list"), t):
                 ty = self.parse_type_annot(t)
@@ -71,10 +63,7 @@ class TypeCheckLfun(TypeCheckLtup):
             case ast.Constant(None) | None:
                 return utils.VoidType()
             case _:
-                raise Exception(
-                    "parse_type_annot: unexpected "
-                    + repr(annot)
-                )
+                raise Exception("parse_type_annot: unexpected " + repr(annot))
 
     def type_check_exp(self, e, env):
         match e:
@@ -89,41 +78,42 @@ class TypeCheckLfun(TypeCheckLtup):
                 args_t = [self.type_check_exp(arg, env) for arg in args]
                 match func_t:
                     case utils.FunctionType(params_t, return_t):
-                        for (arg_t, param_t) in zip(args_t, params_t):
+                        for arg_t, param_t in zip(args_t, params_t):
                             self.check_type_equal(param_t, arg_t, e)
                         return return_t
                     case _:
                         raise Exception(
-                            "type_check_exp: in call, unexpected "
-                            + repr(func_t)
+                            "type_check_exp: in call, unexpected " + repr(func_t)
                         )
             case _:
                 return super().type_check_exp(e, env)
 
     def type_check_stmts(self, ss, env):
         if len(ss) == 0:
-          return
+            return
         match ss[0]:
-          case ast.FunctionDef(name, params, body, dl, returns, comment):
-            new_env = {x: t for (x,t) in env.items()}
-            if isinstance(params, ast.arguments):
-                new_params = [(p.arg, self.parse_type_annot(p.annotation)) \
-                              for p in params.args]
-                ss[0].args = new_params
-                new_returns = self.parse_type_annot(returns)
-                ss[0].returns = new_returns
-            else:
-                new_params = params
-                new_returns = returns
-            for (x,t) in new_params:
-                new_env[x] = t
-            rt = self.type_check_stmts(body, new_env)
-            self.check_type_equal(new_returns, rt, ss[0])
-            return self.type_check_stmts(ss[1:], env)
-          case ast.Return(value):
-            return self.type_check_exp(value, env)
-          case _:
-            return super().type_check_stmts(ss, env)
+            case ast.FunctionDef(name, params, body, dl, returns, comment):
+                new_env = {x: t for (x, t) in env.items()}
+                if isinstance(params, ast.arguments):
+                    new_params = [
+                        (p.arg, self.parse_type_annot(p.annotation))
+                        for p in params.args
+                    ]
+                    ss[0].args = new_params
+                    new_returns = self.parse_type_annot(returns)
+                    ss[0].returns = new_returns
+                else:
+                    new_params = params
+                    new_returns = returns
+                for x, t in new_params:
+                    new_env[x] = t
+                rt = self.type_check_stmts(body, new_env)
+                self.check_type_equal(new_returns, rt, ss[0])
+                return self.type_check_stmts(ss[1:], env)
+            case ast.Return(value):
+                return self.type_check_exp(value, env)
+            case _:
+                return super().type_check_stmts(ss, env)
 
     def type_check(self, p):
         match p:
@@ -149,7 +139,4 @@ class TypeCheckLfun(TypeCheckLtup):
                             )
                 self.type_check_stmts(body, env)
             case _:
-                raise Exception(
-                    "type_check: unexpected "
-                    + repr(p)
-                )
+                raise Exception("type_check: unexpected " + repr(p))

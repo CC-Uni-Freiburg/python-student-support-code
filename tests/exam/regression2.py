@@ -1,5 +1,5 @@
-#in=
-#golden=42
+# in=
+# golden=42
 def ret_42() -> int:
     x = 0
     while True:

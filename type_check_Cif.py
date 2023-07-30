@@ -9,14 +9,7 @@ class TypeCheckCif:
         if t1 == utils.Bottom() or t2 == utils.Bottom():
             pass
         elif t1 != t2:
-            raise Exception(
-                "error: "
-                + repr(t1)
-                + " != "
-                + repr(t2)
-                + " in "
-                + repr(e)
-            )
+            raise Exception("error: " + repr(t1) + " != " + repr(t2) + " in " + repr(e))
 
     def combine_types(self, t1, t2):
         match (t1, t2):
@@ -30,9 +23,11 @@ class TypeCheckCif:
     def type_check_atm(self, e, env):
         match e:
             case ast.Name(id):
-              t = env.get(id, utils.Bottom())
-              env[id] = t  # make sure this gets into the environment for later definedness checking
-              return t
+                t = env.get(id, utils.Bottom())
+                env[
+                    id
+                ] = t  # make sure this gets into the environment for later definedness checking
+                return t
             case ast.Constant(value) if isinstance(value, bool):
                 return utils.BoolType()
             case ast.Constant(value) if isinstance(value, int):
@@ -40,10 +35,7 @@ class TypeCheckCif:
             case ast.Constant(value) if isinstance(value, NoneType):
                 return utils.VoidType()
             case _:
-                raise Exception(
-                    "error in type_check_atm, unexpected "
-                    + repr(e)
-                )
+                raise Exception("error in type_check_atm, unexpected " + repr(e))
 
     def type_check_exp(self, e, env):
         match e:
@@ -93,10 +85,7 @@ class TypeCheckCif:
                 self.type_check_stmts(ss, env)
                 return self.type_check_exp(e, env)
             case _:
-                raise Exception(
-                    "error in type_check_exp, unexpected "
-                    + repr(e)
-                )
+                raise Exception("error in type_check_exp, unexpected " + repr(e))
 
     def type_check_stmts(self, ss, env):
         for s in ss:
@@ -128,10 +117,7 @@ class TypeCheckCif:
             case ast.Return(value):
                 value_t = self.type_check_exp(value, env)
             case _:
-                raise Exception(
-                    "error in type_check_stmt, unexpected"
-                    + repr(s)
-                )
+                raise Exception("error in type_check_stmt, unexpected" + repr(s))
 
     def type_check(self, p):
         match p:
@@ -139,7 +125,7 @@ class TypeCheckCif:
                 env = {}
                 while True:
                     old_env = copy.deepcopy(env)
-                    for (l, ss) in body.items():  # type: ignore
+                    for l, ss in body.items():  # type: ignore
                         self.type_check_stmts(ss, env)
                     if env == old_env:
                         break

@@ -26,10 +26,7 @@ class InterpLvar(InterpLint):
             case ast.Module(body):
                 self.interp_stmts(body, {})
             case _:
-                raise Exception(
-                    "interp: unexpected "
-                    + repr(p)
-                )
+                raise Exception("interp: unexpected " + repr(p))
 
 
 if __name__ == "__main__":

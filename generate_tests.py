@@ -2,6 +2,7 @@ import os
 import sys
 import re
 
+
 def generate_tests(path, filename):
     """
     Converts a multi-test file into a set of test cases (in the subdirectory
@@ -48,9 +49,15 @@ def generate_tests(path, filename):
             raw = file.read()
         for test in re.findall("#begin#\n.*?#end#", raw, re.DOTALL):
             name = test.split("\n")[1]
-            py_content = re.findall("#py#\n.*?#in#", test, re.DOTALL)[0][len("#py#\n"):-len("#in#")]
-            in_content = re.findall("#in#\n.*?#golden#", test, re.DOTALL)[0][len("#in#\n"):-len("#golden#")]
-            golden_content = re.findall("#golden#\n.*?#end#", test, re.DOTALL)[0][len("#golden#\n"):-len("#end#")]
+            py_content = re.findall("#py#\n.*?#in#", test, re.DOTALL)[0][
+                len("#py#\n") : -len("#in#")
+            ]
+            in_content = re.findall("#in#\n.*?#golden#", test, re.DOTALL)[0][
+                len("#in#\n") : -len("#golden#")
+            ]
+            golden_content = re.findall("#golden#\n.*?#end#", test, re.DOTALL)[0][
+                len("#golden#\n") : -len("#end#")
+            ]
             with open(os.path.join(path, name + ".py"), "w") as file:
                 file.write(py_content)
             with open(os.path.join(path, name + ".in"), "w") as file:
@@ -58,10 +65,13 @@ def generate_tests(path, filename):
             with open(os.path.join(path, name + ".golden"), "w") as file:
                 file.write(golden_content)
     except Exception as e:
-        print(f"Something went wrong while generating tests from {os.path.join(path, filename)}\n")
+        print(
+            f"Something went wrong while generating tests from {os.path.join(path, filename)}\n"
+        )
         print("generate_tests help:")
         print(generate_tests.__doc__)
         raise e
+
 
 def generate_all_tests():
     """
@@ -72,6 +82,7 @@ def generate_all_tests():
         for file in files:
             if os.path.splitext(file)[1] == ".tests":
                 generate_tests(subdir, file)
+
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

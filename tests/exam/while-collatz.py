@@ -1,8 +1,8 @@
-#in=42
-#golden=8
+# in=42
+# golden=8
 n = input_int()
 c = 0
-while (n > 1):
+while n > 1:
     c = c + 1
     if n % 2 == 0:
         n = n // 2

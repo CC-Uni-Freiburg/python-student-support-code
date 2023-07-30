@@ -20,7 +20,7 @@ class InterpCtup(InterpCif):
                 if index >= 0 and index < len(t):
                     return t[index]
                 else:
-                    raise TrappedError('index out of bounds')
+                    raise TrappedError("index out of bounds")
             case Allocate(length, typ):
                 array = [None] * length
                 return array
@@ -46,7 +46,7 @@ class InterpCtup(InterpCif):
                 if index >= 0 and index < len(tup):
                     tup[index] = self.interp_exp(value, env)
                 else:
-                    raise TrappedError('index out of bounds')
+                    raise TrappedError("index out of bounds")
                 return self.interp_stmts(ss[1:], env)
             case _:
                 return super().interp_stmts(ss, env)

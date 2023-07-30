@@ -15,10 +15,10 @@ generate_tests.generate_all_tests()
 # Generate runtime.o for linking with the compiled x86 programs
 if not os.path.isfile("runtime.o"):
     # This might produce a warning which normally can be ignored
-    if platform == 'darwin':
-        os.system('gcc -c -g -std=c99 -arch x86_64 runtime.c')
+    if platform == "darwin":
+        os.system("gcc -c -g -std=c99 -arch x86_64 runtime.c")
     else:
-        os.system('gcc -c -g -std=c99 runtime.c')
+        os.system("gcc -c -g -std=c99 runtime.c")
 
 # Execute tests
 
@@ -63,9 +63,11 @@ else:
     # In case you only want to test a single test file
     # you can enable the execution of this branch
     utils.debug = False
-    utils.run_one_test(os.getcwd() + "/tests/var/zero.py",
-                 "single",
-                 compiler,
-                 "single",
-                 typecheck_dict,
-                 interp_dict)
+    utils.run_one_test(
+        os.getcwd() + "/tests/var/zero.py",
+        "single",
+        compiler,
+        "single",
+        typecheck_dict,
+        interp_dict,
+    )

@@ -19,10 +19,8 @@ def interp_exp(e):
         case ast.Call(ast.Name("input_int"), []):
             return int(input())
         case _:
-            raise Exception(
-                "error in interp_exp, unexpected "
-                + repr(e)
-            )
+            raise Exception("error in interp_exp, unexpected " + repr(e))
+
 
 def interp_stmt(s):
     match s:
@@ -31,10 +29,8 @@ def interp_stmt(s):
         case ast.Expr(value):
             interp_exp(value)
         case _:
-            raise Exception(
-                "error in interp_stmt, unexpected "
-                + repr(s)
-            )
+            raise Exception("error in interp_stmt, unexpected " + repr(s))
+
 
 def interp(p):
     match p:
@@ -42,10 +38,7 @@ def interp(p):
             for s in body:
                 interp_stmt(s)
         case _:
-            raise Exception(
-                "error in interp, unexpected "
-                + repr(p)
-            )
+            raise Exception("error in interp, unexpected " + repr(p))
 
 
 # This version is for InterpLvar to inherit from
@@ -67,10 +60,7 @@ class InterpLint:
             case ast.Call(ast.Name("input_int"), []):
                 return int(input())
             case _:
-                raise Exception(
-                    "error in interp_exp, unexpected "
-                    + repr(e)
-                )
+                raise Exception("error in interp_exp, unexpected " + repr(e))
 
     def interp_stmts(self, ss, env):
         if len(ss) == 0:
@@ -84,20 +74,14 @@ class InterpLint:
                 self.interp_exp(value, env)
                 return self.interp_stmts(ss[1:], env)
             case _:
-                raise Exception(
-                    "error in interp_stmts, unexpected "
-                    + repr(ss[0])
-                )
+                raise Exception("error in interp_stmts, unexpected " + repr(ss[0]))
 
     def interp(self, p):
         match p:
             case ast.Module(body):
                 self.interp_stmts(body, {})
             case _:
-                raise Exception(
-                    "error in interp, unexpected "
-                    + repr(p)
-                )
+                raise Exception("error in interp, unexpected " + repr(p))
 
 
 if __name__ == "__main__":

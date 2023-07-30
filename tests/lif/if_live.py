@@ -5,5 +5,4 @@ if x == 0:
     print(x)
 else:
     print(y)
-print(z)    
-
+print(z)

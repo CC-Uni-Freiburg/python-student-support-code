@@ -9,18 +9,13 @@ class TypeCheckCtup(TypeCheckCwhile):
             case utils.TupleType(ts1):
                 match t2:
                     case utils.TupleType(ts2):
-                        for (ty1, ty2) in zip(ts1, ts2):
+                        for ty1, ty2 in zip(ts1, ts2):
                             self.check_type_equal(ty1, ty2, e)
                     case utils.Bottom():
                         pass
                     case _:
                         raise Exception(
-                            "error: "
-                            + repr(t1)
-                            + " != "
-                            + repr(t2)
-                            + " in "
-                            + repr(e)
+                            "error: " + repr(t1) + " != " + repr(t2) + " in " + repr(e)
                         )
             case _:
                 super().check_type_equal(t1, t2, e)
@@ -39,10 +34,7 @@ class TypeCheckCtup(TypeCheckCwhile):
                     case utils.Bottom():
                         return utils.Bottom()
                     case _:
-                        raise Exception(
-                            "type_check_exp: unexpected "
-                            + repr(tup_t)
-                        )
+                        raise Exception("type_check_exp: unexpected " + repr(tup_t))
             case ast.Call(ast.Name("len"), [tup]):
                 tup_t = self.type_check_atm(tup, env)
                 match tup_t:
@@ -51,10 +43,7 @@ class TypeCheckCtup(TypeCheckCwhile):
                     case utils.Bottom():
                         return utils.Bottom()
                     case _:
-                        raise Exception(
-                            "type_check_exp: unexpected "
-                            + repr(tup_t)
-                        )
+                        raise Exception("type_check_exp: unexpected " + repr(tup_t))
             case _:
                 return super().type_check_exp(e, env)
 
@@ -73,9 +62,6 @@ class TypeCheckCtup(TypeCheckCwhile):
                     case utils.Bottom():
                         pass
                     case _:
-                        raise Exception(
-                            "type_check_stmt: unexpected "
-                            + repr(tup_t)
-                        )
+                        raise Exception("type_check_stmt: unexpected " + repr(tup_t))
             case _:
                 return super().type_check_stmt(s, env)

@@ -22,7 +22,7 @@ class InterpLfun(InterpLtup):
         match fun:
             case Function(name, xs, body, env):
                 new_env = {x: v for (x, v) in env.items()}
-                for (x, arg) in zip(xs, args):
+                for x, arg in zip(xs, args):
                     new_env[x] = arg
                 return self.interp_stmts(body, new_env)
             case _:
@@ -30,8 +30,9 @@ class InterpLfun(InterpLtup):
 
     def interp_exp(self, e, env):
         match e:
-            case ast.Call(ast.Name(f), args) \
-                if (f == "input_int") or (f == "len") or (f == "print"):
+            case ast.Call(ast.Name(f), args) if (f == "input_int") or (f == "len") or (
+                f == "print"
+            ):
                 return super().interp_exp(e, env)
             case ast.Call(func, args):
                 f = self.interp_exp(func, env)
@@ -91,7 +92,4 @@ class InterpLfun(InterpLtup):
                 if "main" in env.keys():
                     self.apply_fun(env["main"], [], None)
             case _:
-                raise Exception(
-                    "interp: unexpected "
-                    + repr(p)
-                )
+                raise Exception("interp: unexpected " + repr(p))

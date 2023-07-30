@@ -13,7 +13,7 @@ class InterpCfun(InterpCtup):
                 # trace('apply_fun ' + name)
                 # trace(blocks.keys())
                 new_env = env.copy()
-                for (x, arg) in zip(xs, args):
+                for x, arg in zip(xs, args):
                     new_env[x] = arg
 
                 next_label = name + "start"
@@ -25,7 +25,7 @@ class InterpCfun(InterpCtup):
                             next_label = label
                         case utils.TailCallHelper(func, args, env):
                             new_env = env.copy()
-                            for (x, arg) in zip(xs, args):
+                            for x, arg in zip(xs, args):
                                 new_env[x] = arg
                             next_label = getattr(func, "name") + "start"
                         case ast.Return(retval):
