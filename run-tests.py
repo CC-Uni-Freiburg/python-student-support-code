@@ -55,7 +55,7 @@ if True:
     # Set this to True if you want to check if testing is still progressing
     utils.verbose = False
     # Set this to True if you want to see the output of the compiler
-    utils.debug = False
+    utils.tracing = False
     # Here you can set the tests that should be checked
     succ = True
     for lang in "var regalloc lif tuples fun".split():
@@ -67,7 +67,7 @@ if True:
 else:
     # In case you only want to test a single test file
     # you can enable the execution of this branch
-    utils.debug = False
+    utils.tracing = False
     utils.run_one_test(
         os.getcwd() + "/tests/var/zero.py",
         "single",

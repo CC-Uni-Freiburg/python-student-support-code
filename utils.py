@@ -5,7 +5,6 @@ import ast
 from ast import *
 from dataclasses import dataclass
 
-debug = False
 verbose = False
 
 # move these to the compilers, use a method with overrides -Jeremy
@@ -1353,10 +1352,6 @@ def is_python_extension(filename):
 # runs the interpreter on the program and compares the output to the
 # expected "golden" output.
 def test_pass(passname, interp_dict, program_root, ast, compiler_name):
-    global debug
-    if debug:
-        print(f'Program from "{passname}":')
-        print(ast)
     if passname in interp_dict.keys():
         input_file = program_root + ".in"
         output_file = program_root + ".out"
@@ -1650,11 +1645,6 @@ def compile_and_test(
         trace(program)
         trace("")
 
-        global debug
-        if debug:
-            print(f'Program from "{passname}":')
-            print(program)
-
         x86_filename = program_root + ".s"
         with open(x86_filename, "w") as dest:
             dest.write(str(program))
@@ -1827,9 +1817,8 @@ def run_tests(lang, compiler, compiler_name, type_check_dict, interp_dict):
     successful_tests = 0
     total_tests = 0
     global verbose
-    global debug
     for test in tests:
-        if verbose or debug:
+        if verbose:
             print(f'Testing "{test}"')
         (succ_passes, tot_passes, succ_test) = run_one_test(
             test, lang, compiler, compiler_name, type_check_dict, interp_dict
